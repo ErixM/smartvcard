@@ -1126,6 +1126,7 @@
           :downloadCheckList="downloadCheckList"
           :downloadChecked="downloadChecked"
           :downloadPackage="downloadPackage"
+          :deployCard="deployCardToServer"
         />
         <Help />
       </div>
@@ -3500,6 +3501,141 @@ export default {
         }, 250)
         // window.location.replace("/hosting-upgrade/")
       }
+    },
+    async deployCardToServer() {
+      // Similar to allowDownload but sends to API instead of creating ZIP
+      if (!this.downloadChecked) return
+
+      this.PreviewMode = false
+
+      return new Promise((resolve, reject) => {
+        setTimeout(async () => {
+          try {
+            let el = new DOMParser().parseFromString(
+              this.$refs.html.$refs.html.outerHTML,
+              'text/html'
+            )
+
+            // Inject stylesheets
+            let styleLink = document.createElement('link')
+            styleLink.rel = 'stylesheet'
+            styleLink.href = './style.min.css'
+            el.querySelector('head').appendChild(styleLink)
+
+            // Inject qrcode script
+            let qrcode = document.createElement('script')
+            qrcode.src = './qrcode.min.js'
+            el.querySelector('body').appendChild(qrcode)
+
+            // Inject general script
+            let modals = document.createElement('script')
+            modals.innerText =
+              'let m=document.getElementById("modal"),c=document.getElementById("close"),ki=document.getElementById("keyInfo"),cv=document.getElementById("copyView"),curl=document.getElementById("copyURL"),qrv=document.getElementById("qrView"),qr=document.getElementById("qr"),s=document.getElementById("share"),sqr=document.getElementById("showQR"),sk=document.getElementById("showKey");function tC(e){"2rem"==e.style.top?(e.style.visibility="visible",e.style.top="0px",e.style.opacity=1):(e.style.top="2rem",e.style.opacity=0,setTimeout(()=>{e.style.visibility="hidden"},200))}function dN(e){e.style.display="none"}window.addEventListener("load",()=>{document.querySelector("#topActions").style.display="flex",qr.innerHTML=new QRCode({content:window.location.href,container:"svg-viewbox",join:!0,ecl:"L",padding:0}).svg()}),navigator.canShare?s.addEventListener("click",()=>{navigator.share({title:document.title,text:"You can view my Digital Business Card here:",url:window.location.href})}):s.addEventListener("click",()=>{tC(m),cv.style.display="flex",dN(qrv),ki&&dN(ki)}),sqr.addEventListener("click",()=>{tC(m),qrv.style.display="block",dN(cv),ki&&dN(ki)}),sk&&sk.addEventListener("click",()=>{tC(m),ki&&(ki.style.display="flex"),dN(cv),dN(qrv)}),c.addEventListener("click",()=>tC(m)),curl.addEventListener("click",async()=>{let e=curl.querySelectorAll(".action")[1];await navigator.clipboard.writeText(window.location.href).then(t=>{e.innerText="Copied",setTimeout(()=>{e.innerText="Copy URL"},1e3)})});'
+            el.querySelector('body').appendChild(modals)
+
+            // Inject media script
+            let mediaHandler = document.createElement('script')
+            mediaHandler.innerText =
+              'let pC=document.querySelectorAll(".pCtrl"),pP=document.querySelectorAll(".playPause"),srcs=document.querySelectorAll(".source");srcs.forEach(e=>{e.style.pointerEvents="none",e.removeAttribute("controls")}),pC.forEach((e,l)=>{e.style.display="flex";let r=e.querySelector(".currentTime"),s=e.querySelector(".seekBar"),t=e.querySelector(".playPause"),a=t.querySelector(".play"),c=t.querySelector(".pause");srcs[l].addEventListener("timeupdate",()=>{let e=srcs[l].currentTime,t=100/srcs[l].duration*e;s.value=t,100==t&&(s.value=0,a.style.display="block",c.style.display="none");let o=Math.floor(e/60),y=Math.floor(e%60);o.toString().length<2&&(o="0"+o),y.toString().length<2&&(y="0"+y),r.value=o+":"+y}),s.addEventListener("change",()=>{srcs[l].currentTime=srcs[l].duration*(parseInt(s.value)/100)}),t.addEventListener("click",()=>{srcs[l].paused?(srcs.forEach((e,r)=>{l!=r&&(e.paused||e.pause())}),pP.forEach((e,l)=>{let r=e.querySelector(".play"),s=e.querySelector(".pause");r.style.display="block",s.style.display="none"}),srcs[l].play(),a.style.display="none",c.style.display="block"):(srcs[l].pause(),c.style.display="none",a.style.display="block")})});'
+            if (this.featured.length)
+              el.querySelector('body').appendChild(mediaHandler)
+
+            // Inject tracking scripts
+            let tracker = this.getTrackingCode()
+            while (tracker.firstChild) el.head.appendChild(tracker.firstChild)
+
+            // Prepare files as strings and base64
+            const htmlContent = `<!DOCTYPE html>${el.documentElement.outerHTML}`
+            const cssContent = Theme1
+            const qrScriptContent = QRCode
+            const vcardContent = this.$refs.vCard.$refs.vCard.innerText
+
+            // Prepare images with base64
+            const imagesData = {}
+            for (const key in this.images) {
+              if (this.images[key].url) {
+                const base64 = await this.fileToBase64(this.images[key].resized)
+                imagesData[key] = {
+                  base64: base64.split(',')[1], // Remove data URL prefix
+                  ext: this.images[key].ext
+                }
+              }
+            }
+
+            // Prepare media files
+            const mediaFiles = []
+            let hasFeaturedContent = this.featured.filter(e => e.content.length).length
+            if (hasFeaturedContent) {
+              for (const item of this.featured) {
+                for (const content of item.content) {
+                  if (content.contentType == 'media') {
+                    const base64 = await this.fileToBase64(content.file)
+                    mediaFiles.push({
+                      filename: `${this.getTitle(content.title)}.${content.ext}`,
+                      base64: base64.split(',')[1]
+                    })
+
+                    if (content.type.match(/music|document/gi) && !content.info && content.cover) {
+                      const coverBase64 = await this.fileToBase64(content.cover)
+                      mediaFiles.push({
+                        filename: `${this.getTitle(content.title)}.${content.coverExt}`,
+                        base64: coverBase64.split(',')[1]
+                      })
+                    }
+                  } else if (content.contentType == 'product' && content.image) {
+                    const imgBase64 = await this.fileToBase64(content.image.file)
+                    mediaFiles.push({
+                      filename: `${this.getTitle(content.image.title)}.${content.image.ext}`,
+                      base64: imgBase64.split(',')[1]
+                    })
+                  }
+                }
+              }
+            }
+
+            // Send to API
+            const response = await fetch('/api/deploy', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                clientId: this.username,
+                html: htmlContent,
+                css: cssContent,
+                qrScript: qrScriptContent,
+                vcard: vcardContent,
+                images: imagesData,
+                media: mediaFiles,
+                publicKey: this.pubKeyIsValid ? this.genInfo.key : null,
+                fullName: this.getFullname
+              })
+            })
+
+            if (!response.ok) {
+              const error = await response.json()
+              throw new Error(error.error || 'Deployment failed')
+            }
+
+            const result = await response.json()
+            this.PreviewMode = true
+            resolve(result)
+          } catch (error) {
+            this.PreviewMode = true
+            console.error('Deployment error:', error)
+            alert(`Deployment failed: ${error.message}`)
+            reject(error)
+          }
+        }, 250)
+      })
+    },
+    fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onload = () => resolve(reader.result)
+        reader.onerror = error => reject(error)
+      })
     }
   }
 }
