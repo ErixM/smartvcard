@@ -1,0 +1,68 @@
+# Dependencies
+node_modules
+server/node_modules
+
+# Build output
+.nuxt
+dist
+public
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*.swn
+.editorconfig
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Docker
+docker-compose.yml
+Dockerfile*
+.dockerignore
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Documentation
+README.md
+DEPLOYMENT.md
+LICENSE
+*.md
+
+# Test files
+test
+tests
+__tests__
+*.test.js
+*.spec.js
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.travis.yml
+
+# Misc
+coverage
+.cache
+tmp
+temp

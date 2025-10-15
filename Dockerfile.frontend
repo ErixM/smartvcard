@@ -1,0 +1,30 @@
+# Frontend Dockerfile for Smart vCard (Nuxt.js SPA)
+FROM node:24-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json yarn.lock ./
+
+# Install dependencies (production only)
+RUN yarn install --frozen-lockfile --production=false
+
+# Copy source code
+COPY . .
+
+# Build the application
+RUN yarn build
+
+# Remove dev dependencies to reduce image size
+RUN yarn install --frozen-lockfile --production=true
+
+# Expose port
+EXPOSE 4645
+
+# Set environment variables
+ENV HOST=0.0.0.0
+ENV PORT=4645
+ENV NODE_ENV=production
+
+# Start Nuxt in production mode
+CMD ["yarn", "start"]

@@ -1,0 +1,54 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: smartvcard-frontend
+    restart: unless-stopped
+    ports:
+      - "4645:4645"
+    environment:
+      - NODE_ENV=production
+      - HOST=0.0.0.0
+      - PORT=4645
+    networks:
+      - smartvcard-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:4645"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: smartvcard-backend
+    restart: unless-stopped
+    ports:
+      - "4646:4646"
+    environment:
+      - NODE_ENV=production
+      - PORT=4646
+      - VCARDS_DIR=/var/www/vcards
+      - BASE_URL=https://smartvcard.erixhens.com
+    volumes:
+      # Mount the vcards directory to persist deployed cards
+      - vcards-data:/var/www/vcards
+    networks:
+      - smartvcard-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:4646/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+networks:
+  smartvcard-network:
+    driver: bridge
+
+volumes:
+  vcards-data:
+    driver: local

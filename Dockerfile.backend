@@ -1,0 +1,25 @@
+# Backend Dockerfile for Smart vCard API (Express)
+FROM node:24-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY server/package.json ./
+
+# Install dependencies (production only)
+RUN npm ci --only=production
+
+# Copy source code
+COPY server/index.js ./
+
+# Expose port
+EXPOSE 4646
+
+# Set environment variables
+ENV NODE_ENV=production
+ENV PORT=4646
+ENV VCARDS_DIR=/var/www/vcards
+ENV BASE_URL=https://smartvcard.erixhens.com
+
+# Start the API server
+CMD ["node", "index.js"]
