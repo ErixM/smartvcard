@@ -32,7 +32,7 @@ services:
       - NODE_ENV=production
       - PORT=4646
       - VCARDS_DIR=/var/www/vcards
-      - BASE_URL=https://smartvcard.erixhens.com
+      - BASE_URL=https://smartvcards.erixhens.com
     volumes:
       # Mount the vcards directory to persist deployed cards
       - vcards-data:/var/www/vcards

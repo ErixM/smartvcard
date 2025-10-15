@@ -12,12 +12,12 @@ The system consists of three components:
 
 ## URL Structure
 
-- **Main App**: `https://smartvcard.erixhens.com/` - vCard generator interface
-- **API**: `https://smartvcard.erixhens.com/api/*` - Deployment API endpoints
-- **Deployed Cards**: `https://smartvcard.erixhens.com/client-id` - Individual vCards
+- **Main App**: `https://smartvcards.erixhens.com/` - vCard generator interface
+- **API**: `https://smartvcards.erixhens.com/api/*` - Deployment API endpoints
+- **Deployed Cards**: `https://smartvcards.erixhens.com/client-id` - Individual vCards
 
 Example: A card with client ID `test-client-1` will be available at:
-`https://smartvcard.erixhens.com/test-client-1`
+`https://smartvcards.erixhens.com/test-client-1`
 
 ## Quick Start
 
@@ -107,7 +107,7 @@ smartvcard/
 
 ### 1. User Creates a Card
 
-User fills out the form at `smartvcard.erixhens.com` and clicks "🚀 Deploy to Live URL"
+User fills out the form at `smartvcards.erixhens.com` and clicks "🚀 Deploy to Live URL"
 
 ### 2. Frontend Sends Data to API
 
@@ -149,7 +149,7 @@ Create a `.env` file in the `server/` directory:
 ```bash
 PORT=4646
 VCARDS_DIR=/var/www/vcards
-BASE_URL=https://smartvcard.erixhens.com
+BASE_URL=https://smartvcards.erixhens.com
 NODE_ENV=production
 ```
 

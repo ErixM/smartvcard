@@ -241,7 +241,7 @@ You can customize the deployment by creating a `.env` file on your server:
 ```bash
 # .env
 NODE_ENV=production
-BASE_URL=https://smartvcard.erixhens.com
+BASE_URL=https://smartvcards.erixhens.com
 VCARDS_DIR=/var/www/vcards
 ```
 

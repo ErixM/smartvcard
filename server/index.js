@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 4646
 
 // Configuration
 const VCARDS_DIR = process.env.VCARDS_DIR || '/var/www/vcards'
-const BASE_URL = process.env.BASE_URL || 'https://smartvcard.erixhens.com'
+const BASE_URL = process.env.BASE_URL || 'https://smartvcards.erixhens.com'
 
 // Middleware
 app.use(cors())

@@ -19,7 +19,7 @@ EXPOSE 4646
 ENV NODE_ENV=production
 ENV PORT=4646
 ENV VCARDS_DIR=/var/www/vcards
-ENV BASE_URL=https://smartvcard.erixhens.com
+ENV BASE_URL=https://smartvcards.erixhens.com
 
 # Start the API server
 CMD ["node", "index.js"]

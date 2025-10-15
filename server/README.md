@@ -1,6 +1,6 @@
 # Smart vCard Deployment API
 
-Backend API server for deploying Smart vCards to path-based URLs (e.g., `smartvcard.erixhens.com/client-id`).
+Backend API server for deploying Smart vCards to path-based URLs (e.g., `smartvcards.erixhens.com/client-id`).
 
 ## Features
 
@@ -44,7 +44,7 @@ Environment variables (optional):
 ```bash
 PORT=4646                                    # API server port
 VCARDS_DIR=/var/www/vcards                   # Directory to store cards
-BASE_URL=https://smartvcard.erixhens.com     # Base URL for cards
+BASE_URL=https://smartvcards.erixhens.com     # Base URL for cards
 ```
 
 ## Running the Server
@@ -79,7 +79,7 @@ Response:
 {
   "available": true,
   "clientId": "test-client-1",
-  "url": "https://smartvcard.erixhens.com/test-client-1"
+  "url": "https://smartvcards.erixhens.com/test-client-1"
 }
 ```
 
@@ -118,7 +118,7 @@ Response:
 {
   "success": true,
   "clientId": "test-client-1",
-  "url": "https://smartvcard.erixhens.com/test-client-1",
+  "url": "https://smartvcards.erixhens.com/test-client-1",
   "message": "Card deployed successfully!"
 }
 ```

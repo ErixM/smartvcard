@@ -7,7 +7,7 @@ This guide explains how to deploy Smart vCard using Docker and Docker Compose.
 - Docker Engine 20.10+
 - Docker Compose 2.0+
 - Caddy web server (running on host, not in Docker)
-- Domain configured: `smartvcard.erixhens.com`
+- Domain configured: `smartvcards.erixhens.com`
 
 ## Quick Start
 
@@ -51,7 +51,7 @@ sudo caddy reload
 ```
 ┌─────────────────────────────────────────────────┐
 │                    Caddy                        │
-│         (smartvcard.erixhens.com)              │
+│         (smartvcards.erixhens.com)              │
 │                                                 │
 │  ┌─────────────┐  ┌─────────────┐             │
 │  │   /api/*    │  │  /{client}  │             │
@@ -165,14 +165,14 @@ environment:
   - NODE_ENV=production
   - PORT=4646
   - VCARDS_DIR=/var/www/vcards
-  - BASE_URL=https://smartvcard.erixhens.com
+  - BASE_URL=https://smartvcards.erixhens.com
 ```
 
 Or create a `.env` file:
 ```bash
 # .env file
 NODE_ENV=production
-BASE_URL=https://smartvcard.erixhens.com
+BASE_URL=https://smartvcards.erixhens.com
 ```
 
 ## Volume Management
