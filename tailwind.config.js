@@ -1,5 +1,5 @@
 module.exports = {
-  purge: [
+  content: [
     './components/**/*.{vue,js}',
     './layouts/**/*.vue',
     './pages/**/*.vue',
@@ -9,12 +9,6 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {},
-  },
-  variants: {
-    extend: {
-      backgroundColor: ['group-focus', 'checked'],
-      borderColor: ['checked'],
-    },
   },
   plugins: [],
 }
