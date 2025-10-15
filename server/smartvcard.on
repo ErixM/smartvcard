@@ -14,20 +14,9 @@ smartvcards.erixhens.com {
 		not path /static/*
 	}
 	handle @vcard {
-		# Extract client ID from path
+		# Extract client ID from path and strip it from the URI
+		uri strip_prefix /{re.client.1}
 		root * /var/www/vcards/{re.client.1}
-
-		# Serve static assets directly
-		@static_files path *.css *.js *.jpg *.jpeg *.png *.gif *.svg *.ico *.woff *.woff2 *.vcf
-		handle @static_files {
-			file_server
-		}
-
-		# For HTML pages, try the file or fallback to index.html
-		try_files {path} /index.html
-		file_server {
-			index index.html
-		}
 
 		# Security and caching headers
 		header {
@@ -43,7 +32,12 @@ smartvcards.erixhens.com {
 
 		# Don't cache HTML
 		@html path *.html
-		header @html Cache-Control "public, max-age=600"
+		header @html Cache-Control "public, max-age=0, must-revalidate"
+
+		# Serve files with index.html as directory index
+		file_server {
+			index index.html
+		}
 	}
 
 	# Handle the main vCard generator app (root path and other routes)
