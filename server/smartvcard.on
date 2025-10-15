@@ -7,8 +7,19 @@ smartvcards.erixhens.com {
 	}
 
 	# Handle vCard paths (e.g., /test-client-1)
-	# Match any path that looks like a client ID
-	@vcard path_regexp client ^/([a-zA-Z0-9_-]{3,63})(/.*)?$
+	# Match any path that looks like a client ID, but exclude special paths
+	@vcard {
+		path_regexp client ^/([a-zA-Z0-9_-]{3,63})(/.*)?$
+		not path /_nuxt/*
+		not path /static/*
+		not path /*.js
+		not path /*.css
+		not path /*.json
+		not path /*.ico
+		not path /*.png
+		not path /*.jpg
+		not path /*.svg
+	}
 	handle @vcard {
 		# Extract client ID from path
 		root * /var/www/vcards/{re.client.1}
