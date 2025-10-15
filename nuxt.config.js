@@ -147,6 +147,20 @@ export default {
    */
   modules: [['@nuxtjs/pwa', { icon: false }], '@nuxtjs/robots'],
   /*
+   ** PWA module configuration
+   */
+  pwa: {
+    workbox: {
+      // Don't cache deployed vCard paths - they're served by Caddy
+      runtimeCaching: [
+        {
+          urlPattern: '^/(?!_nuxt|api|static).*',
+          handler: 'NetworkOnly'
+        }
+      ]
+    }
+  },
+  /*
    ** Build configuration
    ** See https://nuxtjs.org/api/configuration-build/
    */
