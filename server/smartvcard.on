@@ -1,4 +1,4 @@
-smartvcard.erixhens.com {
+smartvcards.erixhens.com {
 	# Handle API requests to the deployment backend
 	handle /api/* {
 		reverse_proxy localhost:4646 {
@@ -54,6 +54,6 @@ smartvcard.erixhens.com {
 }
 
 # Redirect www to non-www
-www.smartvcard.erixhens.com {
-	redir https://smartvcard.erixhens.com{uri} permanent
+www.smartvcards.erixhens.com {
+	redir https://smartvcards.erixhens.com{uri} permanent
 }
