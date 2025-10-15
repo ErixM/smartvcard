@@ -39,7 +39,7 @@ smartvcard.erixhens.com {
 
 	# Handle the main vCard generator app (root path and other routes)
 	handle {
-		reverse_proxy localhost:3000 {
+		reverse_proxy localhost:4645 {
 			header_up Host {host}
 		}
 	}
