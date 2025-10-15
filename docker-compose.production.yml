@@ -36,11 +36,8 @@ services:
       - BASE_URL=https://smartvcards.erixhens.com
     volumes:
       # Mount the vcards directory to persist deployed cards
-      # Option 1: Use named volume (recommended for Docker)
-      - vcards-data:/var/www/vcards
-
-      # Option 2: Use bind mount to host directory (uncomment to use)
-      # - /var/www/vcards:/var/www/vcards
+      # Use bind mount so Caddy on the host can access the same directory
+      - /var/www/vcards:/var/www/vcards
     networks:
       - smartvcard-network
     healthcheck:
@@ -58,7 +55,3 @@ services:
 networks:
   smartvcard-network:
     driver: bridge
-
-volumes:
-  vcards-data:
-    driver: local
