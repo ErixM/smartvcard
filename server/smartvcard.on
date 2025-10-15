@@ -12,21 +12,19 @@ smartvcards.erixhens.com {
 		path_regexp client ^/([a-zA-Z0-9_-]{3,63})(/.*)?$
 		not path /_nuxt/*
 		not path /static/*
-		not path /*.js
-		not path /*.css
-		not path /*.json
-		not path /*.ico
-		not path /*.png
-		not path /*.jpg
-		not path /*.svg
 	}
 	handle @vcard {
 		# Extract client ID from path
 		root * /var/www/vcards/{re.client.1}
 
-		# Try files in this order: requested path, then index.html
-		try_files {path} /index.html
+		# Serve static assets directly
+		@static_files path *.css *.js *.jpg *.jpeg *.png *.gif *.svg *.ico *.woff *.woff2 *.vcf
+		handle @static_files {
+			file_server
+		}
 
+		# For HTML pages, try the file or fallback to index.html
+		try_files {path} /index.html
 		file_server {
 			index index.html
 		}
