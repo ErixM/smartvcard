@@ -45,23 +45,10 @@ smartvcard.erixhens.com {
 	}
 
 	# Custom error pages
-	handle_errors 404 {
-		@api path /api/*
-		handle @api {
-			respond "API endpoint not found" 404
-		}
-
-		@vcard path_regexp ^/([a-zA-Z0-9_-]{3,63})
-		handle @vcard {
-			respond "Card not found. This client ID may not exist or hasn't been deployed yet." 404
-		}
-
-		handle {
-			respond "Page not found" 404
-		}
-	}
-
 	handle_errors {
+		@404 expression {err.status_code} == 404
+		respond @404 "Page not found" 404
+
 		respond "{err.status_code} {err.status_text}"
 	}
 }
